@@ -3,6 +3,7 @@ import { Spinner, Table, Progress } from "flowbite-react";
 import { useRouter } from "next/router";
 import { parseGrades, Grades as GradesType, Course } from "../../utils/grades";
 import Head from "next/head";
+import { getEnabledCategories } from "trace_events";
 
 interface GradesProps {
 	client: any;
@@ -62,11 +63,11 @@ export default function Grades({ client, grades, setGrades }: GradesProps) {
 					</p>
 
 					<div className ="text-md tracking-tight mb-2.5 text-gray-900 dark:text-white" >
-						{course.categories.map(
-							
+						
+						{course.categories.slice(0,-1).map(	
 							({name, weight, grade, points}, i) =>(
-							
 							<div key = {i}>
+								
 								<div className="text-base font-medium mb-2 dark:text-white">
 									{name} - {(grade.raw).toFixed(2)}% | {points.earned}/{points.possible}
 								</div>
@@ -81,6 +82,14 @@ export default function Grades({ client, grades, setGrades }: GradesProps) {
 							)
 						)}
 					</div>
+					<div className="text-base font-medium mb-2 dark:text-white">
+						Overall:  {course.grade.letter} ({course.grade.raw}%)
+					</div>
+					<Progress
+						progress={course.grade.raw}
+						size="lg"
+						color={course.grade.color}
+					/>
 					<div className="m-5" />
 					<div className="overflow-x-auto shadow-md rounded-lg">
 						<table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
